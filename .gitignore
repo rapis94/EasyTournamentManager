@@ -1,0 +1,16 @@
+# Ignorar archivo de configuración sensible
+config.php
+
+# Ignorar archivos de sistema y entorno
+.env
+*.log
+*.bak
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+
+# Ignorar carpetas comunes de IDEs/editors
+.vscode/
+.idea/
+nbproject/

@@ -2,18 +2,6 @@
 
 date_default_timezone_set("America/Argentina/Buenos_Aires");
 
-function Config()
-{
-
-    $datos = [
-        0 => "localhost",
-        1 => "root",
-        2 => "4563-Lemos",
-        3 => "marito"
-    ];
-    return $datos;
-}
-
 function getConnection()
 {
 
@@ -82,8 +70,7 @@ function execQuery(string $query, array $params = [])
 
 function hash_password($password)
 {
-    $SALT = 'maritoageofempires1945';
-    return hash('sha256', $SALT . $password);
+    return hash('sha256', SALT . $password);
 }
 
 function Conectar()

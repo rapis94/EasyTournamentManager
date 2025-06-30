@@ -11,7 +11,6 @@ require_once './core/jwt/JWT.php';
 require_once './core//jwt/Key.php';
 define("RUTA_BASE", dirname(realpath(__FILE__)) . "/");
 define("RUTA_NAVEGADOR", "/");
-define("secret", "queElAlientoDelDragonDeLosInjustosNoIncinereTuRectitud");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_POST = json_decode(file_get_contents("php://input"), true) ?? $_POST;
