@@ -7,7 +7,7 @@
 
 ```bash
 cp config.example.php config.php
-
+````
 ## Licencia
 
 Este proyecto fue desarrollado por [Luis Lemos](https://github.com/rapis94) y se publica como parte de su portfolio profesional.
