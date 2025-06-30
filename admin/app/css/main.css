@@ -35,3 +35,8 @@ body {
  .hide{
     display: none;
  }
+
+ .hidden{
+    max-height: 0px !important;
+    overflow: hidden;
+ }

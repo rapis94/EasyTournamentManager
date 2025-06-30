@@ -54,30 +54,70 @@ async function initTorneoGrupos() {
         execContext.grupoDataManager.updateView();
     };
 }
-/* 
-
-execContext = watchObject(execContext, async ({ prop, newValue }) => {
-
-    if (prop === "torneoSelected" && newValue != false) {
-        const result = await cargarGrupos(newValue);
-        execContext.dataStorage = result.map(grupo => {
-            grupo.playerCount = grupo.inscripciones.length;
-            grupo.btnSelect = `<button class="btn btn-primary" onclick="seleccionarGrupo(${grupo.id})">Seleccionar</button>`
-            return grupo
-        });
-        dataManager("results", () => true, execContext.cols);
-    }
-
-    if (prop == "grupoSelected") {
-
-    }
-});
- */
 
 function seleccionarGrupo(id) {
-    console.log(execContext.grupoDataManager);
-    execContext.grupoSelected = execContext.grupoDataManager.dataStorage.find(grupo => grupo.id == id);
-    console.log(execContext.grupoSelected);
+    const grupos = execContext.grupoDataManager.dataStorage;
+    execContext.grupoSelected = grupos.find(grupo => grupo.id == id);
+    execContext.grupoSelected.inscripciones = execContext.grupoSelected.inscripciones.map(
+        inscripcion => {
+            let htmlSelect = `<select onchange='cambiarGrupo(${inscripcion.id}, this.value)'>`;
+            grupos.forEach(grupo => {
+                htmlSelect += `<option ${grupo.id == id ? "selected" : ""} value='${grupo.id}'>${grupo.Nombre}</option>`
+            })
+            htmlSelect += `</select>`
+            inscripcion.comprobanteLink = `<a href='https://demovanilla.ddns.net:456/fotos/comprobantes/${inscripcion.comprobante}' target='_blank'>Click para ver</a>`
+            inscripcion.cambiarGrupo = htmlSelect;
+            return inscripcion
+        }
+    )
+    execContext.grupoSelectedDM = new DataManager({ destino: "grupo-players", cols: ["id", "Nombre", "elo", "comprobanteLink", "cambiarGrupo"], btnPrev: "prev-players", btnNext: "next-players", dataCountView: "dataCountViewPlayers" });
+    execContext.grupoSelectedDM.setData(execContext.grupoSelected.inscripciones);
+    execContext.grupoSelectedDM.updateView();
+    const vistaPlayers = document.getElementById("grupo-details");
+    vistaPlayers.classList.remove("hidden");
+}
+execContext.grupoSelectedDM = {dataStorage: []}
+let superWatch = watchObject(execContext.grupoSelectedDM.dataStorage, ({prop, newValue})=>{
+    console.log(`Cambia ${prop}: ${value}`);
+})
+
+async function cambiarGrupo(idPlayer, idGrupo) {
+    const inscripciones = execContext.grupoSelectedDM.dataStorage;
+    const response = await fetch(server + "/admin/grupos/cambiarGrupo", {
+        headers: {
+            "Content-Type": "application/json",
+            "auth": JSON.parse(localStorage.getItem("sesion")).token
+        },
+        method: "POST",
+        body: JSON.stringify({
+            idPlayer, idGrupo
+        })
+    });
+
+    const json = await response.json();
+
+   if (json.codigo === 200) {
+        const inscripcion = inscripciones.find(inscripcion => inscripcion.id == idPlayer);
+        const oldGrupoId = inscripcion.idGrupo;
+
+        inscripcion.idGrupo = idGrupo;
+
+        const nuevoGrupo = execContext.grupoDataManager.dataStorage.find(grupo => grupo.id == idGrupo);
+        nuevoGrupo.inscripciones.push(inscripcion);
+
+        const oldGrupo = execContext.grupoDataManager.dataStorage.find(grupo => grupo.id == oldGrupoId);
+        oldGrupo.inscripciones = oldGrupo.inscripciones.filter(i => i.id != idPlayer);
+
+        const nuevasInscripciones = inscripciones.filter(i => i.id != idPlayer);
+        execContext.grupoSelectedDM.setData(nuevasInscripciones);
+        execContext.grupoSelectedDM.updateView();
+
+        execContext.grupoDataManager.dataStorage.forEach(grupo => {
+            grupo.playerCount = grupo.inscripciones.length;
+        });
+        execContext.grupoDataManager.updateView();
+    }
+
 }
 
 
