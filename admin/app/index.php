@@ -26,14 +26,19 @@
                         Usuarios</span></a>
             </li>
             <li class="nav-item mb-2">
-                <a class="nav-link text-white" onclick="navegar(event, 'administrarTorneos')"><i
-                        class="bi bi-box-seam"></i> <span>Administrar
+                <a class="nav-link text-white" onclick="navegar(event, 'administrarTorneos')"><i class="bi bi-trophy"></i></i> <span>Administrar
                         Torneos</span></a>
             </li>
             <li class="nav-item mb-2">
                 <a class="nav-link text-white" onclick="navegar(event, 'administrarGrupos')">
                     <i class="bi bi-box-seam"></i>
                     <span>Administrar Grupos</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link text-white" onclick="navegar(event, 'administrarDuelos')">
+                    <i class="bi bi-box-seam"></i>
+                    <span>Administrar Duelos</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
@@ -74,6 +79,7 @@
     <script src="js/torneos.js"></script>
     <script src="js/usuarios.js"></script>
     <script src="js/grupos.js"></script>
+    <script src="js/duelos.js"></script>
 
     <script src="js/renders.js"></script>
 

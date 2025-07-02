@@ -124,6 +124,19 @@ function createRender(dataToRender, table, paginacion) {
 }
 
 function convertirFecha(fechaDMY) {
-    const [dia, mes, anio] = fechaDMY.split("-");
-    return `${anio}-${mes}-${dia}`;
+    const tieneHora = fechaDMY.includes(":");
+
+    if (tieneHora) {
+        const [fecha, hora] = fechaDMY.split(" ");
+        const [dia, mes, anio] = fecha.split("-");
+        return `${anio}-${mes}-${dia} ${hora}`;
+    } else {
+        const [a, b, c] = fechaDMY.split("-");
+        if (a.length === 4) {
+            return fechaDMY;
+        }
+
+        const [dia, mes, anio] = fechaDMY.split("-");
+        return `${anio}-${mes}-${dia}`;
+    }
 }

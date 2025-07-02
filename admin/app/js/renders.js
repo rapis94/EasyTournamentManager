@@ -3,70 +3,73 @@
 const createElement = (...args) => document.createElement(...args);
 
 
-const actualContext = {};
+let actualContext = {};
 let routeContext = {
-    path: ""
+  path: ""
 }
 // Proxy con callback personalizado
 routeContext = watchObject(routeContext, ({ prop, newValue }) => {
-    console.log(`Se modificó '${prop}':`, newValue);
-    if (prop === "path") {
-        switch (newValue) {
-            case "administrarTorneos":
-                initTorneos();
-                break;
-            case "administrarUsuarios":
-                initUsuarios();
-                break;
-            case "administrarGrupos":
-                initTorneoGrupos();
-                break;
-        }
+  console.log(`Se modificó '${prop}':`, newValue);
+  if (prop === "path") {
+    switch (newValue) {
+      case "administrarTorneos":
+        initTorneos();
+        break;
+      case "administrarUsuarios":
+        initUsuarios();
+        break;
+      case "administrarGrupos":
+        initTorneoGrupos();
+        break;
+      case "administrarDuelos":
+        initDuelos();
+        break;
     }
+  }
 });
 
 
 async function navegar(e, slug) {
-    console.log(slug)
-    if (e?.preventDefault) e.preventDefault();
-    const container = document.getElementById("mainContext");
-    container.classList.add("quitarPantalla");
-    container.classList.remove("devolverPantalla");
-    container.innerHTML = "Cargando..."
-    setTimeout(async () => {
-        container.innerHTML = "";
+  console.log(slug)
+  if (e?.preventDefault) e.preventDefault();
+  const container = document.getElementById("mainContext");
+  container.classList.add("quitarPantalla");
+  container.classList.remove("devolverPantalla");
+  container.innerHTML = "Cargando..."
+  setTimeout(async () => {
+    container.innerHTML = "";
 
-        container.classList.remove("quitarPantalla");
-        container.classList.add("devolverPantalla");
-        const response = await fetch("views/" + slug + ".php");
-        const view = await response.text();
-        container.innerHTML = view;
-        routeContext.path = slug;
+    container.classList.remove("quitarPantalla");
+    container.classList.add("devolverPantalla");
+    const response = await fetch("views/" + slug + ".php");
+    const view = await response.text();
+    container.innerHTML = view;
+    routeContext.path = slug;
 
-        history.pushState({ slug }, '', slug);
+    history.pushState({ slug }, '', slug);
 
-    }, 150)
+  }, 150)
 
 }
 
 
 window.addEventListener('popstate', (e) => {
-    const slug = window.location.pathname.slice(1);
-    navegar({}, slug);
+  const slug = window.location.pathname.slice(1);
+  navegar({}, slug);
 });
 
 window.addEventListener("DOMContentLoaded", async () => {
-    const path = window.location.pathname.split("/app/");
-    if (path[1] == "" || path.length == 1) {
-        console.log("a")
-        navegar({}, 'inicio');
-        return
-    }
-    navegar({}, path[1]);
+  const path = window.location.pathname.split("/app/");
+  if (path[1] == "" || path.length == 1) {
+    console.log("a")
+    navegar({}, 'inicio');
+    return
+  }
+  navegar({}, path[1]);
 })
 
 class DataManager {
-  constructor({ destino = 'results', cols = null, paginacion = 10 , btnNext= "btn-next", btnPrev= "btn-prev", dataCountView="dataCountView"} = {}) {
+  constructor({ destino = 'results', cols = null, paginacion = 10, btnNext = "btn-next", btnPrev = "btn-prev", dataCountView = "dataCountView" } = {}) {
     this.destino = destino;
     this.cols = cols;
     this.paginacion = paginacion;
@@ -139,11 +142,11 @@ class DataManager {
     const btnNext = document.getElementById(this.btnNext);
     const btnPrev = document.getElementById(this.btnPrev);
     const dataCountView = document.getElementById(this.dataCountView);
-    btnNext.onclick = ()=>{
-        this.next();
+    btnNext.onclick = () => {
+      this.next();
     }
-    btnPrev.onclick = ()=>{
-        this.prev();
+    btnPrev.onclick = () => {
+      this.prev();
     }
     if (btnPrev) btnPrev.disabled = this.pagina === 1;
     const max = Math.ceil(this.dataStorage.length / this.paginacion);
@@ -155,34 +158,4 @@ class DataManager {
       dataCountView.innerHTML = `Mostrando de ${inicio + 1} a ${Math.min(fin, this.dataStorage.length)} de ${this.dataStorage.length}`;
     }
   }
-}
-
-function dataManagerLocal(destino = 'results', data=[], cols = false) {
-    const tabla = document.getElementById(destino);
-    tabla.innerHTML = "";
-    data.forEach(element => {
-        const row = createElement("tr");
-        if (cols) {
-            const columnas = Object.keys(element);
-            cols.forEach(col => {
-                if (columnas.find(colToFind => colToFind == col)) {
-                    const cell = createElement("td");
-                    cell.innerHTML = element[col];
-                    row.appendChild(cell);
-                }
-            })
-        } else {
-            const columnas = Object.keys(element);
-            columnas.forEach(col => {
-                const cell = createElement("td");
-                cell.innerHTML = element[col];
-                row.appendChild(cell);
-            })
-        }
-        tabla.appendChild(row);
-    });
-
-    const dataCountView = document.getElementById("dataCountView");
-   
-    dataCountView.innerHTML = `Mostrando ${data.length} datos`;
 }

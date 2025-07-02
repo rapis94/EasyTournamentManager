@@ -33,10 +33,19 @@ body {
  }
 
  .hide{
-    display: none;
+    display: none !important;
  }
 
  .hidden{
     max-height: 0px !important;
     overflow: hidden;
+ }
+
+ #results td{
+    align-content: center;
+ }
+
+ #results td ul{
+    padding: 0px;
+    margin: 0px;
  }
