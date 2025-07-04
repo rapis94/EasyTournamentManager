@@ -34,7 +34,7 @@ Es una plataforma **Full Stack** que permite:
 ### 🖥️ Frontend Administrativo
 
 - **React + Vite**
-- TailwindCSS
+- Bootstrap 5
 - React Toastify
 - Hooks personalizados (por ejemplo: `useDataManager` para paginación y estado)
 
