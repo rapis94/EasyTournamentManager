@@ -1,3 +1,4 @@
+
 let globalSesion = {};
 
 
@@ -20,6 +21,8 @@ let execContext = {
     usuario: null,
     token: null
 };
+
+let globalContext = {};
 
 async function initEngine() {
     const ubicacionActual = window.location.pathname;
@@ -121,6 +124,31 @@ function createRender(dataToRender, table, paginacion) {
         paginaActual: 1
     }
     globalSesion.renders.push(render);
+}
+
+async function elementFromFile({file, element = "div", clases = [], id = null, vars = {}}) {
+    const output = document.createElement(element);
+
+    const response = await fetch(file, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(vars)
+    });
+
+    if (!response.ok) {
+        throw new Error(`Error al cargar ${file}: ${response.statusText}`);
+    }
+
+    const html = await response.text();
+    output.innerHTML = html;
+
+    if (id) output.id = id;
+
+    if (clases.length > 0) {
+        clases.forEach(clase => output.classList.add(clase));
+    }
+
+    return output;
 }
 
 function convertirFecha(fechaDMY) {

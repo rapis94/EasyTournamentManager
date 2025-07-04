@@ -2,29 +2,49 @@
 
 const createElement = (...args) => document.createElement(...args);
 
+function createElementHijo({ padre, element, content = null, clases = null, id = null }) {
+  const addClasses = (el, clases) => {
+    if (!clases) return;
+    if (Array.isArray(clases)) {
+      clases.forEach(clase => el.classList.add(clase));
+    } else {
+      el.className = clases;
+    }
+  };
+
+  const create = c => {
+    const el = createElement(element);
+    addClasses(el, clases);
+    if (id) el.id = id;
+    if (c != null) el.innerHTML = c;
+    padre.appendChild(el);
+    return el;
+  };
+
+  if (Array.isArray(content)) {
+    return content.map(create);
+  } else {
+    return create(content);
+  }
+}
 
 let actualContext = {};
 let routeContext = {
   path: ""
 }
-// Proxy con callback personalizado
+const routeHandlers = {
+  administrarTorneos: initTorneos,
+  administrarUsuarios: initUsuarios,
+  administrarGrupos: initTorneoGrupos,
+  administrarDuelos: initDuelos,
+  tablaPosiciones: initPosiciones,
+};
+
 routeContext = watchObject(routeContext, ({ prop, newValue }) => {
   console.log(`Se modificó '${prop}':`, newValue);
-  if (prop === "path") {
-    switch (newValue) {
-      case "administrarTorneos":
-        initTorneos();
-        break;
-      case "administrarUsuarios":
-        initUsuarios();
-        break;
-      case "administrarGrupos":
-        initTorneoGrupos();
-        break;
-      case "administrarDuelos":
-        initDuelos();
-        break;
-    }
+
+  if (prop === "path" && routeHandlers[newValue]) {
+    routeHandlers[newValue]();
   }
 });
 

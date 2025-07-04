@@ -15,7 +15,7 @@ define("RUTA_NAVEGADOR", "/");
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_POST = json_decode(file_get_contents("php://input"), true) ?? $_POST;
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $params = $_GET; 
+    $params = $_GET;
 }
 
 function generarJWT($datos, $clave, $expSegundos = 3600)
@@ -56,15 +56,18 @@ class NAVEGADOR
         if (strpos($uri, "login") === false && strpos($uri, "polling") === false && strpos($uri, "public") === false) {
             try {
                 if (!isset($this->headers["auth"])) {
+                    http_response_code(401);
                     echo json_encode(["codigo" => 401, "mensaje" => "Acceso no autorizado 1"]);
                     exit();
                 }
                 $token = $this->headers["auth"];
                 if (!$user = verificarJWT($token, secret)) {
+                    http_response_code(401);
                     echo json_encode(["codigo" => 401, "mensaje" => "Acceso no autorizado 2"]);
                     exit();
                 }
             } catch (Exception $e) {
+                http_response_code(401);
                 echo json_encode(["codigo" => 401, "mensaje" => "Acceso no autorizado 3"]);
             }
 

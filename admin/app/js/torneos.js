@@ -16,6 +16,7 @@ async function cargarTorneos() {
         torneo.pagoTxt = torneo.pago == 0 ? "No" : "Si";
         torneo.fechaParsed = convertirFecha(torneo.fechaInicio);
         torneo.modBtn = `<button class="btn btn-primary" onclick="modificarTorneo(${torneo.id})">Modificar</button>`;
+        torneo.verTablaPos = `<button class="btn btn-primary" onclick="verTablaPos(${torneo.id})">Modificar</button>`;
         return torneo;
     });
 }

@@ -29,7 +29,7 @@ function crearAutoDuelo1v1(array $inscripciones, string $fecha, int $grupo)
             $insertDuelo = "INSERT INTO duelo (fecha, idGrupo) VALUES (?, ?)";
             $idDuelo = execQuery($insertDuelo, [$fecha, $grupo]);
 
-            $insertJugador = "INSERT INTO duelo_jugador (idDuelo, idInscripcion, equipo, ganador) VALUES (?, ?, ?, ?)";
+            $insertJugador = "INSERT INTO duelo_jugador (idDuelo, idInscripcion, equipo, resultado) VALUES (?, ?, ?, ?)";
             $result = execQuery($insertJugador, [$idDuelo, $jugadorA["id"], 1, 0]);
             $resultB = execQuery($insertJugador, [$idDuelo, $jugadorB["id"], 2, 0]);
             if (!$result) {
