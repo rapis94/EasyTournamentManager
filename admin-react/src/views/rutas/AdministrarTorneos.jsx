@@ -94,7 +94,7 @@ export default function AdministrarTorneos() {
     if (cargando) return <div>Cargando torneos...</div>;
 
     return (
-        <div>
+        <div className="aparecer">
             <h4>Administrar torneos</h4>
             <button className="btn btn-primary mb-3">Crear nuevo torneo</button>
 

@@ -22,7 +22,6 @@ function AdministrarGrupos() {
         datos: grupos,
         elementosPorPagina: 5,
         filtro: () => true,
-        sort: "Nombre"
     });
 
     useEffect(() => {
@@ -79,7 +78,7 @@ function AdministrarGrupos() {
     };
 
     return (
-        <div>
+        <div className="aparecer">
             <h4>Administrar Grupos</h4>
 
             <div className="form-floating mb-3">

@@ -12,15 +12,23 @@ function crearAutoDuelo1v1(array $inscripciones, string $fecha, int $grupo)
                 SELECT dj1.idDuelo
                 FROM duelo_jugador dj1
                 JOIN duelo_jugador dj2 ON dj1.idDuelo = dj2.idDuelo
+                JOIN duelo d ON d.id = dj1.idDuelo
                 WHERE (
                     (dj1.idInscripcion = ? AND dj2.idInscripcion = ?) OR
                     (dj1.idInscripcion = ? AND dj2.idInscripcion = ?)
                 )
+                AND d.idGrupo = ?
                 GROUP BY dj1.idDuelo
                 HAVING COUNT(*) = 2
             ";
 
-            $dueloExistente = execQuery($checkQuery, [$jugadorA, $jugadorB, $jugadorB, $jugadorA]);
+            $dueloExistente = execQuery($checkQuery, [
+                $jugadorA["id"],
+                $jugadorB["id"],
+                $jugadorB["id"],
+                $jugadorA["id"],
+                $grupo
+            ]);
 
             if ($dueloExistente) {
                 continue;
@@ -32,6 +40,7 @@ function crearAutoDuelo1v1(array $inscripciones, string $fecha, int $grupo)
             $insertJugador = "INSERT INTO duelo_jugador (idDuelo, idInscripcion, equipo, resultado) VALUES (?, ?, ?, ?)";
             $result = execQuery($insertJugador, [$idDuelo, $jugadorA["id"], 1, 0]);
             $resultB = execQuery($insertJugador, [$idDuelo, $jugadorB["id"], 2, 0]);
+
             if (!$result) {
                 $errores[] = $jugadorA["id"];
             }
@@ -43,6 +52,7 @@ function crearAutoDuelo1v1(array $inscripciones, string $fecha, int $grupo)
 
     return $errores;
 }
+
 try {
     $result = crearAutoDuelo1v1($_POST["inscripciones"], "1900-01-01 00:00:00", $_POST["idGrupo"]);
 

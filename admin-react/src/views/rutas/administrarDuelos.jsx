@@ -81,10 +81,10 @@ export default function AdministrarDuelos() {
     }, [])
 
     return (
-        <div>
+        <div className="aparecer">
             <h4>Administrar Duelos</h4><br></br>
             <div className="form-floating mb-3">
-                <select className="form-select" id="torneoSelect" onChange={({ target: { value } }) => { cargarGrupos(value); cargarDuelos(value); setTorneoSelected(torneos.find(({ id }) => id == value)) }} aria-label="Selecciona una opción">
+                <select className="form-select" id="torneoSelect" onChange={({ target: { value } }) => { cargarGrupos(value); cargarDuelos(value); setTorneoSelected(torneos.find(({ id }) => id == value)); setGrupoSelected(null)}} aria-label="Selecciona una opción">
                     {
                         torneos.length === 0
                             ? <option disabled>Cargando torneos...</option>

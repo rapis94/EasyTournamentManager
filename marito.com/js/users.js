@@ -119,13 +119,17 @@ async function getMiPerfil() {
                     <b>Grupo:</b> ${torneo.Grupo}<br>
                     <b>Comprobante de pago:</b> ${torneo.comprobante == '' ? "Información no disponible" : ` <a href="${api + "/fotos/comprobantes/" + torneo.comprobante}">Click para ver comprobante</a>`}
                 </p>
+                <button class="btn btn-normal ">Ver duelos</button>
             </div>
         `;
         torneos.innerHTML += html;
     });
-
+    exectContext = json.torneos;
+    console.log(exectContext)
 
 }
+
+
 
 async function cambiarPass(e, form) {
     e.preventDefault();

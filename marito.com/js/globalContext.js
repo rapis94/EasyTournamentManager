@@ -37,3 +37,5 @@ function toBase64(file) {
 function showHideItem(item){
     item.classList.toggle("hidden");
 }
+
+let globalContext = {}

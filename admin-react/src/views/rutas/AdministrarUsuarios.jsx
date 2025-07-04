@@ -74,7 +74,7 @@ function AdministrarUsuarios() {
   if (loading) return <div>Cargando usuarios...</div>;
 
   return (
-    <div>
+    <div className="aparecer">
       <h4>Administrar usuarios</h4>
       <button className="btn btn-primary mb-3">Crear nuevo usuario</button>
 

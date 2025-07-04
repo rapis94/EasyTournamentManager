@@ -49,3 +49,9 @@ async function inscribirme(e, form) {
         window.location.href = "/login";
     }
 }
+
+async function getTorneo() {
+   
+
+    cargarPopup("inscripcionTorneo", "Duelos en el torneo " + json.torneo.Nombre, json.torneo);
+}
