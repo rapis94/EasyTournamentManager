@@ -4,19 +4,33 @@ if (!isset($_POST["idTorneo"])) {
     echo json_encode(["codigo" => 400, "mensaje" => "Falta idTorneo"]);
     exit;
 }
+$join = "";
+if(!isset($_POST["getAll"])){
+    $join = "JOIN torneo ON torneo.id = grupo_torneo.idTorneo AND (grupo_torneo.idFase = torneo.idFase OR grupo_torneo.idFase = -1)";
+
+}
 
 $idTorneo = $_POST["idTorneo"];
 
-$grupos = execQuery("SELECT grupo_torneo.* FROM grupo_torneo WHERE idTorneo = ?", [$idTorneo]);
+$grupos = execQuery("SELECT grupo_torneo.* 
+                            FROM grupo_torneo
+                            $join
+                            WHERE grupo_torneo.idTorneo = ? ",
+    [$idTorneo]
+);
 
-$inscripciones = execQuery("
-    SELECT inscripciones.*, usuario.Nombre, usuario.elo 
-    FROM inscripciones
-    JOIN usuario ON usuario.id = inscripciones.idUsuario
-    WHERE inscripciones.idGrupo IN (
-        SELECT id FROM grupo_torneo WHERE idTorneo = ?
-    )
-", [$idTorneo]);
+$grupoIds = array_column($grupos, 'id');
+if (count($grupoIds)) {
+    $placeholders = implode(',', array_fill(0, count($grupoIds), '?'));
+    $params = $grupoIds;
+
+    $inscripciones = execQuery("
+        SELECT inscripciones.*, usuario.Nombre, usuario.elo 
+        FROM inscripciones
+        JOIN usuario ON usuario.id = inscripciones.idUsuario
+        WHERE inscripciones.idGrupo IN ($placeholders)
+    ", $params);
+}
 
 $duelos = execQuery("
     SELECT duelo_jugador.*, duelo.idGrupo, duelo.fecha 

@@ -3,6 +3,9 @@ function cerrarPopup(){
     popup.classList.add("hide");
 }
 
+const createElement = (...args) => document.createElement(...args);
+
+
 async function cargarPopup(view, title="Popup", vars=[]){
     const response = await fetch("/views/popups/"+view+".php", {
         method: "POST",
@@ -36,6 +39,21 @@ function toBase64(file) {
 
 function showHideItem(item){
     item.classList.toggle("hidden");
+}
+
+function convertirFecha(fechaMysql) {
+  if (!fechaMysql) return "";
+
+  const tieneHora = fechaMysql.includes(" ");
+
+  const [fechaPart, horaPart] = fechaMysql.split(" ");
+  const [anio, mes, dia] = fechaPart.split("-");
+
+  if (tieneHora && horaPart) {
+    return `${dia}-${mes}-${anio} ${horaPart}`;
+  }
+
+  return `${dia}-${mes}-${anio}`;
 }
 
 let globalContext = {}

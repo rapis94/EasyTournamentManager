@@ -3,6 +3,8 @@ import { LoginContext } from "../../contextos/loginContext";
 import useDataManager from "../../hooks/useDataManager";
 import GrupoJugadores from "./grupos/GrupoJugadores";
 import { toast } from "react-toastify";
+import BasicModal from "../../componentes/system/modal";
+import NuevaFase from "../../componentes/forms/grupos/NuevaFase";
 
 function AdministrarGrupos() {
     const { server } = useContext(LoginContext);
@@ -10,7 +12,7 @@ function AdministrarGrupos() {
     const [grupos, setGrupos] = useState([]);
     const [torneoSeleccionado, setTorneoSeleccionado] = useState(null);
     const [grupoSeleccionado, setGrupoSeleccionado] = useState(null);
-
+    const [modal, setModal] = useState(null);
     const {
         dataPaginada,
         mostrarConteo,
@@ -61,13 +63,14 @@ function AdministrarGrupos() {
                 playerCount: g.inscripciones?.length || 0,
             }));
 
-            if (idTorneo !== torneoSeleccionado) {
-                setTorneoSeleccionado(idTorneo);
+            if (idTorneo !== torneoSeleccionado?.id) {
+                setTorneoSeleccionado(torneos.find(({id})=>id==idTorneo));
             }
 
             setGrupos(gruposFormateados);
             setGrupoSeleccionado(null);
         } catch (error) {
+            console.error(error);
             toast.error("Error al cargar grupos");
         }
     };
@@ -77,10 +80,14 @@ function AdministrarGrupos() {
         setGrupoSeleccionado(grupo);
     };
 
+    const crearFase = ()=>{
+        setModal(<BasicModal titulo="Crear nueva fase"  onClose={()=>setModal(null)} contenido={<NuevaFase onSuccess={()=>setModal(null)} torneo={torneoSeleccionado} gruposOrigin={grupos}></NuevaFase>}></BasicModal>)
+    }
+
     return (
         <div className="aparecer">
             <h4>Administrar Grupos</h4>
-
+            {modal}
             <div className="form-floating mb-3">
                 <select
                     className="form-select"
@@ -97,8 +104,7 @@ function AdministrarGrupos() {
                 <label htmlFor="torneoSelect">Torneo</label>
             </div>
 
-            <button className="btn btn-primary mb-3">Crear nuevo Grupo</button>
-
+            <button className="btn btn-primary mb-3">Crear nuevo Grupo</button> <button className="btn btn-primary mb-3" disabled={!torneoSeleccionado} onClick={crearFase}>Crear nueva fase</button>
             {grupoSeleccionado && (
                 <GrupoJugadores
                     grupo={grupoSeleccionado}

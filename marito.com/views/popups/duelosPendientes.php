@@ -1,12 +1,12 @@
 <?php
 $data = json_decode(file_get_contents("php://input"));
 include_once "../../php/Data.php";
-
 ?>
 
 <div>
     <h4>Duelos en el torneo</h4>
-    <table>
+    <button class="btn btn-success" onclick="renderDuelos(()=>true, this)">Todos</button><button class="btn"  onclick="renderDuelos((duelo)=>duelo.resultado == 0, this)">Solo pendientes</button><button onclick="renderDuelos((duelo)=>duelo.resultado != 0, this)" class="btn">Solo disputados</button>
+    <table class="table table-dark">
         <thead>
             <tr>
                 <th>
@@ -21,11 +21,12 @@ include_once "../../php/Data.php";
             </tr>
 
         </thead>
-        <tbody>
-            <tr>
-                <td></td>
-            </tr>
+        <tbody id="tabla-resultados">
+            
         </tbody>
 
     </table>
 </div>
+
+<script>
+</script>

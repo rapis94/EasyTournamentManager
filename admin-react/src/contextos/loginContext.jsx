@@ -5,6 +5,7 @@ export const LoginContext = createContext();
 export default function LoginContextProvider({ children }) {
     const [loginType, setLoginType] = useState(0);
     const [server, setServer] = useState("https://demovanilla.ddns.net:456");
+    const [modalState, setModalState] = useState(false);
     const location = useLocation();
     const navigator = useNavigate();
     useEffect(() => {

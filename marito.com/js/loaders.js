@@ -1,5 +1,5 @@
 const api = "https://demovanilla.ddns.net:456";
-
+const nullDate = "1900-01-01 00:00:00";
 function toBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -29,4 +29,5 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
 
 });
+
 

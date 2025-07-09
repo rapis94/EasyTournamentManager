@@ -119,17 +119,62 @@ async function getMiPerfil() {
                     <b>Grupo:</b> ${torneo.Grupo}<br>
                     <b>Comprobante de pago:</b> ${torneo.comprobante == '' ? "Información no disponible" : ` <a href="${api + "/fotos/comprobantes/" + torneo.comprobante}">Click para ver comprobante</a>`}
                 </p>
-                <button class="btn btn-normal ">Ver duelos</button>
+                <button class="btn btn-normal" onclick="verDuelos(${torneo.id})">Ver duelos</button>
             </div>
         `;
         torneos.innerHTML += html;
     });
-    exectContext = json.torneos;
-    console.log(exectContext)
-
+    globalContext.torneos = json.torneos;
 }
 
+async function verDuelos(idTorneo) {
+    globalContext.torneoSelected = globalContext.torneos.find(({ id }) => id == idTorneo);
+    const torneo = globalContext.torneoSelected;
+    await cargarPopup("duelosPendientes", "Duelos en el torneo " + torneo.Torneo, torneo);
+    renderDuelos();
+}
 
+function renderDuelos(filtro = () => true, element = null) {
+    const duelos = globalContext.torneoSelected.duelos.filter(filtro);
+    if (element != null) {
+        console.log(element)
+        const otrosBotones = document.getElementsByClassName("btn-success");
+        Array.from(otrosBotones).forEach(boton => {
+            boton.classList.remove("btn-success");
+        });
+        element.classList.add("btn-success");
+    }
+
+    const tbody = document.getElementById("tabla-resultados");
+    tbody.innerHTML = "";
+    duelos.forEach(duelo => {
+        const tr = createElement("tr");
+        const tdFecha = createElement("td");
+        const tdJugadores = createElement("td");
+        const tdResultado = createElement("td");
+        const fechaFormatted = convertirFecha(duelo.fecha);
+        const buttonProponer = createElement("button");
+        buttonProponer.innerHTML = "Proponer fecha";
+        buttonProponer.className = "btn btn-normal"
+        if (duelo.fecha == nullDate) {
+            tdFecha.appendChild(buttonProponer);
+        } else {
+            tdFecha.innerHTML = fechaFormatted;
+        }
+        const listaJugadores = createElement("ul");
+        duelo.jugadores.forEach(jugador => {
+            const item = createElement("li");
+            item.innerHTML = jugador.Nombre;
+            listaJugadores.appendChild(item);
+        });
+        tdJugadores.appendChild(listaJugadores);
+        tdResultado.innerHTML = duelo.resultado == 0 ? "Sin disputar" : (duelo.resultado == 1 ? "Victoria" : "Derrota");
+        tr.appendChild(tdFecha);
+        tr.appendChild(tdJugadores);
+        tr.appendChild(tdResultado);
+        tbody.appendChild(tr);
+    })
+}
 
 async function cambiarPass(e, form) {
     e.preventDefault();

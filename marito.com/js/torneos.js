@@ -50,8 +50,3 @@ async function inscribirme(e, form) {
     }
 }
 
-async function getTorneo() {
-   
-
-    cargarPopup("inscripcionTorneo", "Duelos en el torneo " + json.torneo.Nombre, json.torneo);
-}

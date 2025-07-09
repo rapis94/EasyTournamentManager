@@ -68,6 +68,63 @@ function execQuery(string $query, array $params = [])
     }
 }
 
+function execTransaction(array $queries)
+{
+    $conn = getConnection();
+    $conn->begin_transaction();
+
+    try {
+        foreach ($queries as $item) {
+            $query = $item['query'];
+            $params = $item['params'] ?? [];
+
+            $stmt = $conn->prepare($query);
+            if (!$stmt) {
+                throw new Exception("Error al preparar: " . $conn->error);
+            }
+
+            if (!empty($params)) {
+                $types = '';
+                foreach ($params as $param) {
+                    if (is_int($param)) {
+                        $types .= 'i';
+                    } elseif (is_float($param)) {
+                        $types .= 'd';
+                    } elseif (is_string($param)) {
+                        $types .= 's';
+                    } else {
+                        $types .= 'b';
+                    }
+                }
+                $stmt->bind_param($types, ...$params);
+            }
+
+            if (!$stmt->execute()) {
+                throw new Exception("Error al ejecutar: " . $stmt->error);
+            }
+
+            $stmt->close();
+        }
+
+        $conn->commit();
+        return true;
+    } catch (Exception $e) {
+        $conn->rollback();
+        throw new Exception("Transacción fallida: " . $e->getMessage());
+    }
+}
+
+function generatePlaceHolders($cantidad){
+    $output = "";
+    for($i=0, $i<$cantidad; $i++;){
+        if($i > 0){
+            $output .= ",";
+        }
+        $output .= "?";
+    }
+    return $output;
+}
+
 function hash_password($password)
 {
     return hash('sha256', SALT . $password);

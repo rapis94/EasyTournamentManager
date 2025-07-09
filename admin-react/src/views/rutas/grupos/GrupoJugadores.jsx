@@ -15,7 +15,7 @@ export default function GrupoJugadores({ grupo, grupos, setGrupo, actualizarGrup
   } = useDataManager({
     datos: grupo.inscripciones.map(inscripcion => ({
       ...inscripcion,
-      comprobanteLink: (
+      comprobanteLink: inscripcion.comprobante != "" ? (
         <a
           href={`https://demovanilla.ddns.net:456/fotos/comprobantes/${inscripcion.comprobante}`}
           target="_blank"
@@ -23,7 +23,7 @@ export default function GrupoJugadores({ grupo, grupos, setGrupo, actualizarGrup
         >
           Ver
         </a>
-      ),
+      ) : "No disponible",
       cambiarGrupo: (
         <select
           defaultValue={grupo.id}

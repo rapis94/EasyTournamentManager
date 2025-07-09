@@ -3,7 +3,7 @@ try {
     $result = execQuery("UPDATE inscripciones SET idGrupo = ? WHERE id = ?", [$_POST["idGrupo"], $_POST["idPlayer"]]);
 
     if ($result) {
-        $data = execQuery("SELECT usuario.*, torneo.Nombre as Torneo, grupo_torneo.Nombre as Grupo FROM inscripciones, usuario, torneo, grupo_torneo WHERE inscripciones.idGrupo = grupo_torneo.id and idTorneo = torneo.id and idUsuario = usuario.id and inscripciones.id=?", [$_POST["idPlayer"]]);
+       /*  $data = execQuery("SELECT usuario.*, torneo.Nombre as Torneo, grupo_torneo.Nombre as Grupo FROM inscripciones, usuario, torneo, grupo_torneo WHERE inscripciones.idGrupo = grupo_torneo.id and idTorneo = torneo.id and idUsuario = usuario.id and inscripciones.id=?", [$_POST["idPlayer"]]);
         $data = $data[0];
         $to = $data->email;
         $subject = "Hola parcero! Tienes un nuevo grupo asignado en el torneo \"{$data->Torneo}\"!!!!";
@@ -16,7 +16,9 @@ try {
 
         $headers .= 'From: noreply-marito@vanillasoftworks.com' . "\r\n";
 
-        mail($to, $subject, $message, $headers);
+        mail($to, $subject, $message, $headers); 
+        
+        ######################## Comentado para enviar mails durante el testing*/
         echo json_encode(["codigo" => 200, "mensaje" => "Grupo cambiado con éxito"]);
     } else {
         http_response_code(500);

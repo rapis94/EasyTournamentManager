@@ -6,6 +6,7 @@ import Login from './views/Login';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import Front from './views/Front';
+import BasicModal from './componentes/system/modal';
 function App() {
 
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/front/*" element={<Front />} />
       </Routes>
+      
     </ContextoLoginProvider>
   )
 }
