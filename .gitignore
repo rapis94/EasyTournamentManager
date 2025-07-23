@@ -1,16 +1,43 @@
-# Ignorar archivo de configuración sensible
-config.php
+# Node modules
+node_modules/
 
-# Ignorar archivos de sistema y entorno
+# Build output
+dist/
+build/
+
+# Environment variables
 .env
-*.log
-*.bak
-*.tmp
-*.swp
+.env.local
+.env.*.local
+
+# System files
 .DS_Store
 Thumbs.db
 
-# Ignorar carpetas comunes de IDEs/editors
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor folders/files
 .vscode/
 .idea/
-nbproject/
+*.swp
+
+# React-related
+*.log
+*.cache
+coverage/
+.eslintcache
+
+# PHP config files
+config.php
+
+# Misc
+*.tgz
+*.gz
+*.zip
+
+# Optional: ignore lock files if no lockfile strategy
+package-lock.json
+yarn.lock
